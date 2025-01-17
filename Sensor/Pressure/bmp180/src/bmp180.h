@@ -67,13 +67,52 @@ typedef struct st_CalibrationCoeff
 	e_SamplingMode samplingMode;
 }st_CalibrationCoeff;
 
+/*
+ * @brief  Initializes the BMP180 sensor.
+ * @note   Performs a soft reset, checks device readiness, reads calibration coefficients, and sets the sampling mode.
+ * @param  None
+ * @retval e_Status  Status of the operation (STATUS_OK or STATUS_NOT_OK).
+ */
 e_Status BMP180_Init();
+
+/*
+ * @brief  Deinitializes the BMP180 sensor.
+ * @note   Performs a soft reset of the sensor.
+ * @param  None
+ * @retval None
+ */
 void BMP180_DeInit();
 
+/*
+ * @brief  Reads the temperature value from the BMP180 sensor.
+ * @note   Calculates the actual temperature in Celsius using the uncompensated temperature value.
+ * @param  tempValue  Pointer to store the calculated temperature value.
+ * @retval e_Status  Status of the operation (STATUS_OK or STATUS_NOT_OK).
+ */
 e_Status BMP180_ReadTemperature(float *tempValue);
+
+/*
+ * @brief  Reads the pressure value from the BMP180 sensor.
+ * @note   Calculates the actual pressure in Pa using the uncompensated pressure value and temperature.
+ * @param  pressureValue  Pointer to store the calculated pressure value.
+ * @retval e_Status  Status of the operation (STATUS_OK or STATUS_NOT_OK).
+ */
 e_Status BMP180_ReadPressure(int32_t *pressureValue);
 
+/*
+ * @brief  Sets the sampling mode for the BMP180 sensor.
+ * @note   Updates the sampling mode in the calibration coefficient structure.
+ * @param  samplingMode  The desired sampling mode for the sensor.
+ * @retval None
+ */
 void BMP180_SetSamplingMode(e_SamplingMode samplingMode);
+
+/*
+ * @brief  Gets the current sampling mode of the BMP180 sensor.
+ * @note   Returns the sampling mode from the calibration coefficient structure.
+ * @param  None
+ * @retval e_SamplingMode  The current sampling mode of the sensor.
+ */
 e_SamplingMode BMP180_GetSamplingMode();
 
 
