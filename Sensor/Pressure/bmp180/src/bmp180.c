@@ -5,9 +5,11 @@
  *      Author: jainr
  */
 
+/* Includes -------------------------------------------*/
 #include "bmp180.h"
 #include "bmp180_cfg.h"
 
+/* Structures -----------------------------------------*/
 /* Structure to hold calibration coefficients */
 static st_CalibrationCoeff calibrationCoefficient =
 {
@@ -30,7 +32,7 @@ static st_CalibrationCoeff calibrationCoefficient =
 	ULTRA_LOW_POWER, /* Sampling Mode */
 };
 
-
+/* Static Function Declaration ------------------------*/
 /**
  * @brief  Performs a soft reset of the BMP180 sensor.
  * @note   Resets the sensor using the soft reset register.
@@ -64,7 +66,7 @@ static e_Status BMP180_GetUncompensatedTemp(int16_t *rawTemp);
 static e_Status BMP180_GetUncompensatedPressure(int16_t *rawPressure);
 
 
-
+/* Static Function Definition -------------------------*/
 static void BMP180_SoftReset()
 {
 	uint8_t softReset = BMP180_SOFT_RESET_VALUE;
@@ -114,7 +116,6 @@ static e_Status BMP180_ReadCalibrationCoefficient()
 
 	return returnStatus;
 }
-
 
 static e_Status BMP180_GetUncompensatedTemp(int16_t *rawTemp)
 {
@@ -178,6 +179,7 @@ static e_Status BMP180_GetUncompensatedPressure(int16_t *rawPressure)
 }
 
 
+/* Function Definition --------------------------------*/
 e_Status BMP180_Init()
 {
 	e_Status returnStatus = STATUS_NOT_OK;

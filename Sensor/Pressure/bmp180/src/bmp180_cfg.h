@@ -8,15 +8,18 @@
 #ifndef BMP180_CFG_H_
 #define BMP180_CFG_H_
 
+/* Includes -------------------------------------------*/
 #include <common.h>
 #include "i2c.h"
 
+/* Macro Definition -----------------------------------*/
 #define BMP180_I2C_HANDLER			&hi2c1
 #define BMP180_TIMEOUT				100u
 #define BMP180_TRIAL				3u
 #define BMP180_MEMORY_REG_SIZE		I2C_MEMADD_SIZE_8BIT		/* If the memory register size is 8 bits(0x01) or 16 bits */
 
 
+/* Function Definition --------------------------------*/
 /*
  * @brief  Checks if the BMP180 device is ready.
  * @param  deviceAddr  Address of the BMP180 device.

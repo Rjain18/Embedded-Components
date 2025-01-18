@@ -8,8 +8,11 @@
 #ifndef BMP180_H_
 #define BMP180_H_
 
+
+/* Includes -------------------------------------------*/
 #include <common.h>
 
+/* Macro Definitions ----------------------------------*/
 #define BMP180_READ_ADDRESS				0xEF
 #define BMP180_WRITE_ADDRESS			0xEE
 
@@ -33,6 +36,7 @@
 
 #define BMP180_WAIT_TIME				5u
 
+/* Enums ----------------------------------------------*/
 typedef enum e_SamplingMode
 {
 	ULTRA_LOW_POWER = 0x00,
@@ -41,6 +45,8 @@ typedef enum e_SamplingMode
 	ULTRA_HIGH_RESOLUTION
 }e_SamplingMode;
 
+
+/* Structures -----------------------------------------*/
 typedef struct st_CalibrationCoeff
 {
 	/* Calibrated Coefficient from sensor*/
@@ -67,6 +73,7 @@ typedef struct st_CalibrationCoeff
 	e_SamplingMode samplingMode;
 }st_CalibrationCoeff;
 
+/* Function Declaration -------------------------------*/
 /*
  * @brief  Initializes the BMP180 sensor.
  * @note   Performs a soft reset, checks device readiness, reads calibration coefficients, and sets the sampling mode.
