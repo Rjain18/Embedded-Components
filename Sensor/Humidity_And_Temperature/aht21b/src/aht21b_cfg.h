@@ -8,15 +8,18 @@
 #ifndef AHT21B_CFG_H_
 #define AHT21B_CFG_H_
 
+/* Includes -------------------------------------------*/
 #include <common.h>
 #include "i2c.h"
 
+/* Macro Definition -----------------------------------*/
 #define AHT21B_I2C_HANDLER			&hi2c1
 #define AHT21B_TIMEOUT				100u
 #define AHT21B_TRIAL				3u
 #define AHT21B_MEMORY_REG_SIZE		I2C_MEMADD_SIZE_8BIT		/* If the memory register size is 8 bits(0x01) or 16 bits */
 
 
+/* Function Definition --------------------------------*/
 /*
  * @brief  Checks if the AHT21B device is ready.
  * @param  deviceAddr  Address of the AHT21B device.
@@ -24,7 +27,7 @@
  */
 e_Status AHT21B_IsDeviceReady(uint8_t deviceAddr)
 {
-    return (HAL_I2C_IsDeviceReady(BMP180_I2C_HANDLER, deviceAddr, BMP180_TRIAL, BMP180_TIMEOUT));
+    return (HAL_I2C_IsDeviceReady(AHT21B_I2C_HANDLER, deviceAddr, AHT21B_TRIAL, AHT21B_TIMEOUT));
 }
 
 /*
@@ -37,7 +40,7 @@ e_Status AHT21B_IsDeviceReady(uint8_t deviceAddr)
  */
 e_Status AHT21B_MemoryWrite(uint8_t deviceAddr, uint16_t memoryAddr, uint8_t *writeDataBuffer, uint8_t writeDataSize)
 {
-    return HAL_I2C_Mem_Write(BMP180_I2C_HANDLER, deviceAddr, memoryAddr, BMP180_MEMORY_REG_SIZE, writeDataBuffer, (uint16_t)writeDataSize, BMP180_TIMEOUT);
+    return HAL_I2C_Mem_Write(AHT21B_I2C_HANDLER, deviceAddr, memoryAddr, AHT21B_MEMORY_REG_SIZE, writeDataBuffer, (uint16_t)writeDataSize, AHT21B_TIMEOUT);
 }
 
 /*
@@ -50,7 +53,7 @@ e_Status AHT21B_MemoryWrite(uint8_t deviceAddr, uint16_t memoryAddr, uint8_t *wr
  */
 e_Status AHT21B_MemoryRead(uint8_t deviceAddr, uint16_t memoryAddr, uint8_t *readDataBuffer, uint8_t readDataSize)
 {
-    return HAL_I2C_Mem_Read(BMP180_I2C_HANDLER, deviceAddr, memoryAddr, BMP180_MEMORY_REG_SIZE, readDataBuffer, (uint16_t)readDataSize, BMP180_TIMEOUT);
+    return HAL_I2C_Mem_Read(AHT21B_I2C_HANDLER, deviceAddr, memoryAddr, AHT21B_MEMORY_REG_SIZE, readDataBuffer, (uint16_t)readDataSize, AHT21B_TIMEOUT);
 }
 
 
