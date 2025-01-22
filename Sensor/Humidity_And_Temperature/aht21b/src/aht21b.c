@@ -17,7 +17,8 @@
 static e_Status AHT21B_ResetRegisters();
 
 static e_Status AHT21B_ReadRawData(uint32_t *rawHumidity, uint32_t *rawTemp);
-static e_Status AHT21B_ReadRawDataCRC(uint32_t *rawHumidity, uint32_t *rawTemp);
+
+static e_Status AHT21B_CheckCRC(uint8_t crcData);
 
 /* Static Function Definition -------------------------*/
 
@@ -65,6 +66,7 @@ static e_Status AHT21B_ReadRawData(uint32_t *rawHumidity, uint32_t *rawTemp)
 	uint8_t rawDataBuffer[7u] = {0x00};
 	uint8_t startMeasureRequest[AHT21B_MEASUREMENT_SIZE] = {AHT21B_MEASUREMENT_BYTE0, AHT21B_MEASUREMENT_BYTE1};
 	uint8_t count = 0;
+	uint32_t localBuffer = 0x00;
 
 	/* Trigger measurement and wait for 80ms as per datahsheet*/
 	returnValue = AHT21B_MemoryWrite(AHT21B_I2C_WRITE_ADDRESS, AHT21B_START_MEASUREMENT, startMeasureRequest, AHT21B_MEASUREMENT_SIZE);
@@ -73,7 +75,6 @@ static e_Status AHT21B_ReadRawData(uint32_t *rawHumidity, uint32_t *rawTemp)
 	if(returnValue == STATUS_OK)
 	{
 		/* Wait for Status byte to indicate the completion of measurement */
-
 		do{
 			(void)AHT21B_MemoryRead(AHT21B_I2C_READ_ADDRESS, AHT21B_STATUS_ADDRESS, rawDataBuffer, AHT21B_STATUS_SIZE);
 			count++;
@@ -91,10 +92,30 @@ static e_Status AHT21B_ReadRawData(uint32_t *rawHumidity, uint32_t *rawTemp)
 		/*Error handler*/
 	}
 
+#if(AHT21B_DATA_CRC_CHECK == 1u)
+
+#endif
+	/* Store the 20-bits humidity data */
+	localBuffer = (localBuffer | rawDataBuffer[1u] ) << 8u;
+	localBuffer = (localBuffer | rawDataBuffer[2u] ) << 8u;
+	localBuffer = (localBuffer | rawDataBuffer[3u] );
+	localBuffer = localBuffer >> 4u;
+	*rawHumidity = localBuffer;
+
+	/* Store the 20-bits temperature data */
+	localBuffer = 0u;
+	localBuffer = (localBuffer | rawDataBuffer[3u] ) << 8u;
+	localBuffer = (localBuffer | rawDataBuffer[4u] ) << 8u;
+	localBuffer = (localBuffer | rawDataBuffer[5u] );
+	localBuffer = localBuffer & 0xFFFFF;
+	*rawTemp = localBuffer;
+
+
+
 	return returnValue;
 }
 
-static e_Status AHT21B_ReadRawDataCRC(uint32_t *rawHumidity, uint32_t *rawTemp)
+static e_Status AHT21B_CheckCRC(uint8_t crcData)
 {
 
 }
@@ -118,7 +139,7 @@ e_Status AHT21B_Init()
 		}
 		else
 		{
-
+			/* Do nothing */
 		}
 	}
 	else
@@ -132,10 +153,30 @@ e_Status AHT21B_Init()
 }
 
 
-e_Status AHT21B_GetTempHumidity()
+e_Status AHT21B_GetTempHumidity(float *humidityVal, float *tempVal)
 {
-	uint32_t testA, testB;
-	AHT21B_ReadRawData(&testA, &testB);
+	e_Status returnValue = STATUS_NOT_OK;
+	uint32_t rawHumidity = 0;
+	uint32_t rawTemp = 0;
+	float localData = 0.0f;
+
+	/* Read the raw humidity and temperature */
+	returnValue = AHT21B_ReadRawData(&rawHumidity, &rawTemp);
+
+	/* Calculate the Relative humidity and Temperature if the reading is successful */
+	if(returnValue == STATUS_OK)
+	{
+		/* Calculate the Relative Humidity in % */
+		/* Note: 2^20 = 1048576 */
+		localData = ((float)rawHumidity/1048576.0) * 100.0f;
+		*humidityVal = localData;
+
+		/* Calculate the Temperature in Celcius */
+		localData = (((float)rawTemp / 1048576.0) * 200.0f) - 50.0f;
+		*tempVal = localData;
+	}
+
+	return returnValue;
 
 }
 

@@ -45,7 +45,7 @@
 /* Function Declaration -------------------------------*/
 
 e_Status AHT21B_Init();
-e_Status AHT21B_GetTempHumidity();
+e_Status AHT21B_GetTempHumidity(float *humidityVal, float *tempVal);
 
 
 

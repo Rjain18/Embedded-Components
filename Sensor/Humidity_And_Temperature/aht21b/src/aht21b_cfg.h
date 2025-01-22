@@ -18,6 +18,8 @@
 #define AHT21B_TRIAL				3u
 #define AHT21B_MEMORY_REG_SIZE		I2C_MEMADD_SIZE_8BIT		/* If the memory register size is 8 bits(0x01) or 16 bits */
 
+/* Enable this for having CRC check on each sensor data. This will increase the latency of system */
+#define AHT21B_DATA_CRC_CHECK		1u
 
 /* Function Definition --------------------------------*/
 /*
