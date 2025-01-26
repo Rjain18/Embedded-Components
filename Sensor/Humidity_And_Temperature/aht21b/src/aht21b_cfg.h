@@ -1,8 +1,9 @@
-/*
- * aht21b_cfg.h
+/**
+ * @file aht21b_cfg.h
+ * @brief Configuration for AHT21B temperature and humidity sensor
  *
- *  Created on: Jan 18, 2025
- *      Author: jainr
+ * @date 2025-01-18
+ * @author jainr
  */
 
 #ifndef AHT21B_CFG_H_
@@ -19,7 +20,8 @@
 #define AHT21B_MEMORY_REG_SIZE		I2C_MEMADD_SIZE_8BIT		/* If the memory register size is 8 bits(0x01) or 16 bits */
 
 /* Enable this for having CRC check on each sensor data. This will increase the latency of system */
-#define AHT21B_DATA_CRC_CHECK		1u
+/* AHT21B is not sending proper CRC data. */
+#define AHT21B_DATA_CRC_CHECK		0u
 
 /* Function Definition --------------------------------*/
 /*

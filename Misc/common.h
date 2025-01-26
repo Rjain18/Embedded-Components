@@ -1,8 +1,11 @@
-/*
- * bmp180.h
+/**
+ * @file common.h
+ * @brief Contains common objects used in the project
  *
- *  Created on: Dec 19, 2024
- *      Author: jainr
+ * This file contains the implementation for AHT21B sensor interfacing functions.
+ *
+ * @date 2025-01-18
+ * @author jainr
  */
 
 #ifndef COMMON_H_
@@ -20,7 +23,8 @@
 typedef enum e_Status
 {
 	STATUS_OK = 0x00,
-	STATUS_NOT_OK = 0x01
+	STATUS_NOT_OK = 0x01,
+	STATUS_CRC_ERROR = 0x02
 } e_Status;
 
 

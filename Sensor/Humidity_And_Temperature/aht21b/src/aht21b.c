@@ -1,8 +1,11 @@
-/*
- * aht21b.c
+/**
+ * @file aht21b.c
+ * @brief Driver for AHT21B temperature and humidity sensor
  *
- *  Created on: Jan 18, 2025
- *      Author: jainr
+ * This file contains the implementation for AHT21B sensor interfacing functions.
+ *
+ * @date 2025-01-18
+ * @author jainr
  */
 
 
@@ -14,11 +17,30 @@
 
 
 /* Static Function Declaration ------------------------*/
+/**
+ * @brief Resets the AHT21B Calibration registers.
+ *
+ * @return e_Status STATUS_OK if successful, STATUS_NOT_OK otherwise.
+ */
 static e_Status AHT21B_ResetRegisters();
 
+/**
+ * @brief Reads raw data from the AHT21B sensor.
+ *
+ * @param[out] rawHumidity Pointer to store raw humidity data.
+ * @param[out] rawTemp Pointer to store raw temperature data.
+ * @return e_Status STATUS_OK if successful, STATUS_NOT_OK otherwise
+ * 					STATS_CRC_ERROR is CRC check is enabled and failed.
+ */
 static e_Status AHT21B_ReadRawData(uint32_t *rawHumidity, uint32_t *rawTemp);
 
-static e_Status AHT21B_CheckCRC(uint8_t crcData);
+/**
+ * @brief Checks CRC of the received data.
+ *
+ * @param[in] crcData Pointer to data for CRC check.
+ * @return e_Status STATUS_OK if CRC is correct, STATUS_NOT_OK otherwise.
+ */
+static e_Status AHT21B_CheckCRC(uint8_t *crcData);
 
 /* Static Function Definition -------------------------*/
 
@@ -92,32 +114,70 @@ static e_Status AHT21B_ReadRawData(uint32_t *rawHumidity, uint32_t *rawTemp)
 		/*Error handler*/
 	}
 
-#if(AHT21B_DATA_CRC_CHECK == 1u)
-
+#if(AHT21B_DATA_CRC_CHECK == 1u) /* Can be enabled and disabled in aht21b_cfg.h */
+	if(AHT21B_CheckCRC(rawDataBuffer) == STATUS_OK )
+	{
 #endif
-	/* Store the 20-bits humidity data */
-	localBuffer = (localBuffer | rawDataBuffer[1u] ) << 8u;
-	localBuffer = (localBuffer | rawDataBuffer[2u] ) << 8u;
-	localBuffer = (localBuffer | rawDataBuffer[3u] );
-	localBuffer = localBuffer >> 4u;
-	*rawHumidity = localBuffer;
+		/* Store the 20-bits humidity data */
+		localBuffer = (localBuffer | rawDataBuffer[1u] ) << 8u;
+		localBuffer = (localBuffer | rawDataBuffer[2u] ) << 8u;
+		localBuffer = (localBuffer | rawDataBuffer[3u] );
+		localBuffer = localBuffer >> 4u;
+		*rawHumidity = localBuffer;
 
-	/* Store the 20-bits temperature data */
-	localBuffer = 0u;
-	localBuffer = (localBuffer | rawDataBuffer[3u] ) << 8u;
-	localBuffer = (localBuffer | rawDataBuffer[4u] ) << 8u;
-	localBuffer = (localBuffer | rawDataBuffer[5u] );
-	localBuffer = localBuffer & 0xFFFFF;
-	*rawTemp = localBuffer;
+		/* Store the 20-bits temperature data */
+		localBuffer = 0u;
+		localBuffer = (localBuffer | rawDataBuffer[3u] ) << 8u;
+		localBuffer = (localBuffer | rawDataBuffer[4u] ) << 8u;
+		localBuffer = (localBuffer | rawDataBuffer[5u] );
+		localBuffer = localBuffer & 0xFFFFF;
+		*rawTemp = localBuffer;
 
-
+#if(AHT21B_DATA_CRC_CHECK == 1u)
+	}
+	else
+	{
+		returnValue = STATUS_CRC_ERROR;
+	}
+#endif
 
 	return returnValue;
 }
 
-static e_Status AHT21B_CheckCRC(uint8_t crcData)
+static e_Status AHT21B_CheckCRC(uint8_t *crcData)
 {
+	uint8_t returnValue = STATUS_NOT_OK;
+	uint8_t dataLoop = 0u;
+	uint8_t bitLoop = 0u;
+	uint8_t crcValue = AHT21B_CRC_INIT;
 
+	for(dataLoop = 0u; dataLoop < AHT21B_DATA_LEN; dataLoop++)
+	{
+		crcValue ^= crcData[dataLoop];
+		for(bitLoop = 0u; bitLoop < AHT21B_DATA_BITS; bitLoop++)
+		{
+			if(crcValue & AHT21B_8TH_BIT_MASK)
+			{
+				crcValue = (crcValue << 1u) ^ AHT21B_CRC_POLY;
+			}
+			else
+			{
+				crcValue = crcValue << 1u;
+			}
+		}
+	}
+
+	/* checking the calculated CRC with the recieved CRC from the sensor */
+	if( crcData[AHT21B_DATA_CRC_POS] == crcValue)
+	{
+		returnValue = STATUS_OK;
+	}
+	else
+	{
+		returnValue = STATUS_NOT_OK;
+	}
+
+	return returnValue;
 }
 
 /* Function Definition --------------------------------*/
@@ -152,7 +212,6 @@ e_Status AHT21B_Init()
 	return returnValue;
 }
 
-
 e_Status AHT21B_GetTempHumidity(float *humidityVal, float *tempVal)
 {
 	e_Status returnValue = STATUS_NOT_OK;
@@ -177,9 +236,5 @@ e_Status AHT21B_GetTempHumidity(float *humidityVal, float *tempVal)
 	}
 
 	return returnValue;
-
 }
-
-
-
 

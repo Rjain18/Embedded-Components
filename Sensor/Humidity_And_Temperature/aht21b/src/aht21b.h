@@ -1,8 +1,11 @@
-/*
- * aht21b.h
+/**
+ * @file aht21b.h
+ * @brief Driver for AHT21B temperature and humidity sensor
  *
- *  Created on: Jan 18, 2025
- *      Author: jainr
+ * This file contains the implementation for AHT21B sensor interfacing functions.
+ *
+ * @date 2025-01-18
+ * @author jainr
  */
 
 #ifndef AHT21B_H_
@@ -33,7 +36,12 @@
 #define AHT21B_MEASUREMENT_SIZE				0x2
 #define AHT21B_MEASUREMENT_TIMEOUT			100u
 
-
+#define AHT21B_DATA_LEN						6u
+#define AHT21B_DATA_BITS					8u
+#define AHT21B_DATA_CRC_POS					7u
+#define AHT21B_CRC_INIT						0xFF
+#define AHT21B_CRC_POLY						0x31
+#define AHT21B_8TH_BIT_MASK					0x80
 
 
 /* Enums ----------------------------------------------*/
@@ -44,7 +52,20 @@
 
 /* Function Declaration -------------------------------*/
 
+/**
+ * @brief Initializes the AHT21B sensor.
+ *
+ * @return e_Status STATUS_OK if successful, STATUS_NOT_OK otherwise.
+ */
 e_Status AHT21B_Init();
+
+/**
+ * @brief Reads the temperature and humidity values from the AHT21B sensor.
+ *
+ * @param[out] humidityVal Pointer to store the calculated humidity value.
+ * @param[out] tempVal Pointer to store the calculated temperature value.
+ * @return e_Status STATUS_OK if successful, STATUS_NOT_OK otherwise.
+ */
 e_Status AHT21B_GetTempHumidity(float *humidityVal, float *tempVal);
 
 
