@@ -92,18 +92,106 @@
 
 /* Function Declaration -------------------------------*/
 
+/**
+ * @brief  Initializes the LCD.
+ *
+ * This function initializes the LCD by checking if the device is ready,
+ * and then sending the necessary initialization commands.
+ *
+ * @return e_Status Returns the status of the initialization.
+ */
 e_Status LCD_Init();
 
+ /**
+  * @brief  Sets the cursor position on the LCD.
+  *
+  * This function sets the cursor position on the LCD to the specified row and column.
+  *
+  * @param  rowPos The row position (0- LCD_ROW_NO).
+  * @param  colPos The column position (0- LCD_CHAR_NO).
+  * @return e_Status Returns the status of the cursor position update.
+  */
 e_Status LCD_SetCursor(uint8_t rowPos, uint8_t colPos);
 
+/**
+ * @brief  Sends a string to the LCD.
+ *
+ * This function sends a string of data to the LCD.
+ *
+ * @param  stringData Pointer to the string data to be sent.
+ * @param  dataSize The size of the data to be sent.
+ * @return e_Status Returns the status of the transmission.
+ */
 e_Status LCD_SendString(char* stringData, uint8_t dataSize);
 
+/**
+ * @brief  Turns on the LCD display.
+ *
+ * This function sets the display control flag for turning on the display
+ * and sends the updated display control byte to the LCD.
+ *
+ * @return e_Status Returns the status of the transmission.
+ */
 e_Status LCD_DisplayOn();
+
+/**
+ * @brief  Turns off the LCD display.
+ *
+ * This function clears the display control flag for turning off the display
+ * and sends the updated display control byte to the LCD.
+ *
+ * @return e_Status Returns the status of the transmission.
+ */
 e_Status LCD_DisplayOff();
+
+/**
+ * @brief  Turns on the cursor.
+ *
+ * This function sets the display control flag for turning on the cursor
+ * and sends the updated display control byte to the LCD.
+ *
+ * @return e_Status Returns the status of the transmission.
+ */
 e_Status LCD_CursorOn();
+
+/**
+ * @brief  Turns off the cursor.
+ *
+ * This function clears the display control flag for turning off the cursor
+ * and sends the updated display control byte to the LCD.
+ *
+ * @return e_Status Returns the status of the transmission.
+ */
 e_Status LCD_CursorOff();
+
+/**
+ * @brief  Turns on the blinking cursor.
+ *
+ * This function sets the display control flag for turning on the blinking cursor
+ * and sends the updated display control byte to the LCD.
+ *
+ * @return e_Status Returns the status of the transmission.
+ */
 e_Status LCD_BlinkOn();
+
+/**
+ * @brief  Turns off the blinking cursor.
+ *
+ * This function clears the display control flag for turning off the blinking cursor
+ * and sends the updated display control byte to the LCD.
+ *
+ * @return e_Status Returns the status of the transmission.
+ */
 e_Status LCD_BlinkOff();
+
+/**
+ * @brief  Clears the LCD display.
+ *
+ * This function sends the clear display command to the LCD
+ * and introduces a delay for the command to take effect.
+ *
+ * @return e_Status Returns the status of the transmission.
+ */
 e_Status LCD_ClearDisplay();
 
 

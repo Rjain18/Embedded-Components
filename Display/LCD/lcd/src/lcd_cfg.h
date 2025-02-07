@@ -43,12 +43,21 @@ e_Status LCD_IsDeviceReady()
     return (HAL_I2C_IsDeviceReady(LCD_I2C_HANDLER, LCD_I2C_ADDRESS, LCD_TRIAL, LCD_TIMEOUT));
 }
 
-
+/**
+ * @brief  Transmits data to the LCD via I2C.
+ *
+ * This function uses the HAL I2C Master Transmit function to send data
+ * to the LCD over I2C.
+ *
+ * @param  writeDataBuffer Pointer to the data buffer to be transmitted.
+ * @param  writeDataSize The size of the data to be transmitted.
+ * @return e_Status Returns the status of the transmission.
+ */
 e_Status LCD_Transmit(uint8_t *writeDataBuffer, uint8_t writeDataSize)
 {
     return HAL_I2C_Master_Transmit(LCD_I2C_HANDLER, LCD_I2C_ADDRESS, writeDataBuffer, (uint16_t)writeDataSize, LCD_TIMEOUT);
-
 }
+
 #endif /*(LCD_COMMUNICATION == LCD_I2C_COM)*/
 
 #endif /* LCD_CFG_H_ */
