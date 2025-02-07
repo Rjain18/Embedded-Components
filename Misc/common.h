@@ -24,7 +24,9 @@ typedef enum e_Status
 {
 	STATUS_OK = 0x00,
 	STATUS_NOT_OK = 0x01,
-	STATUS_CRC_ERROR = 0x02
+	STATUS_BUSY = 0x02,
+	STATUS_TIMEOUT = 0x03,
+	STATUS_CRC_ERROR = 0x04
 } e_Status;
 
 
